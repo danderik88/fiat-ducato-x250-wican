@@ -2,7 +2,6 @@
 {"CANID":646,"Name":"speed_kmh","PID":-1,"PIDIndex":0,"StartBit":16,"BitLength":16,"Expression":"V/16","Cycle":1000},
 {"CANID":641,"Name":"rpm","PID":-1,"PIDIndex":0,"StartBit":40,"BitLength":16,"Expression":"((B6*256)+B5)/8","Cycle":1000},
 {"CANID":641,"Name":"coolant_c","PID":-1,"PIDIndex":0,"StartBit":24,"BitLength":8,"Expression":"V-40","Cycle":1000},
-{"CANID":641,"Name":"engine_running","PID":-1,"PIDIndex":0,"StartBit":8,"BitLength":1,"Expression":"1-V","Cycle":1000},
 {"CANID":1539,"Name":"odometer_km","PID":-1,"PIDIndex":0,"StartBit":12,"BitLength":20,"Expression":"V","Cycle":5000},
 {"CANID":1539,"Name":"range_km","PID":-1,"PIDIndex":0,"StartBit":37,"BitLength":11,"Expression":"V","Cycle":5000},
 {"CANID":896,"Name":"doors","PID":-1,"PIDIndex":0,"StartBit":8,"BitLength":8,"Expression":"V","Cycle":1000},

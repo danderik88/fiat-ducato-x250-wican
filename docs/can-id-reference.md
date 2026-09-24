@@ -14,7 +14,7 @@ Every value was checked on the vehicle (instrument cluster, GPS or a repeated ma
 | | | | Main beam / flash | `b1` bit 4 | stalk |
 | | | | Turn signal left / right | `b2` `0x40` / `0x20`, follows the blinker | stalk |
 | | | | Rear fog light | `b1` bit 1 (only with the lights on) | switch on/off 3 times |
-| `0x281` | 20 Hz | 8 | Engine running | `b1` bit 7: `1` = engine **off** | start/stop |
+| `0x281` | 20 Hz | 8 | Engine running | use **RPM > 300**. `b1` bit 7 is `1` only with ignition on and engine stopped; it reads "running" in the last frame at STOP and for the ~20 s the ECU keeps transmitting after a drive | 3 key tests (key-on only, start, stop after running) |
 | | | | Coolant temperature | `b3 − 40` °C | 81 °C with the gauge needle at mid-scale |
 | | | | Engine RPM | `(b6·256 + b5) / 8` | ~830 idle, 1800 / 3000 on blips |
 | `0x286` | 10 Hz | 8 | Vehicle speed | `(b2·256 + b3) / 16` km/h | within 1 % of GPS on 4 steady stretches |

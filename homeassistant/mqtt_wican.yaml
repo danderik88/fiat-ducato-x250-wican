@@ -66,7 +66,8 @@ binary_sensor:
   - name: "Ducato Engine Running"
     unique_id: ducato_engine_running
     state_topic: "wican/<device_id>/can/rx"
-    value_template: "{{ ('ON' if value_json.engine_running > 0.5 else 'OFF') if value_json.engine_running is defined }}"
+    # From RPM: the 0x281 b1 bit7 flag reads "running" at key-off and during the ECU after-run.
+    value_template: "{{ ('ON' if value_json.rpm > 300 else 'OFF') if value_json.rpm is defined }}"
     expire_after: 15
     device_class: running
 

@@ -70,7 +70,7 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x180` | side lights / dipped / main beam | `b1` bit 5 / bit 3 / bit 4 |
 | `0x180` | rear fog light | `b1` bit 1 |
 | `0x180` | turn signal left / right | `b2` `0x40` / `0x20` (blinks) |
-| `0x281` | engine running | `b1` bit 7, **1 = off** |
+| `0x281` | engine running | **RPM > 300** (don't use `b1` bit 7, see Gotchas) |
 | `0x281` | coolant temperature | `b3 − 40` °C |
 | `0x281` | RPM | `(b6·256 + b5) / 8` |
 | `0x286` | speed | `(b2·256 + b3) / 16` km/h (also `0x2A0` `b0-b1`) |
@@ -144,6 +144,7 @@ Real data from a short evening drive, as recorded by Home Assistant:
 
 - **The bus is completely silent with the key out.** Nothing can be read while parked. Live sensors use `expire_after: 15` so they go `unavailable` instead of freezing; hide them in dashboards with a `visibility` condition (`state_not: [unavailable, unknown]`).
 - **The last frame at key-off lies.** Just before going silent the bus sends one frame with odd values: parking brake released, engine still running. Don't build automations on the key-off edge.
+- **Don't use `0x281` `b1` bit 7 as "engine running".** It is `1` only with the ignition on and the engine stopped. At key-off (STOP) it reads "running" in the last frame, and after a drive the engine ECU keeps sending `0x281` for ~20 s with the bit at "running" and RPM at 0. RPM > 300 is right in every case (tested 3 times: key-on only, start/stop, stop after running).
 - **Odometer and range have no expiry**, so they keep the last value while parked, but they become `unknown` after a Home Assistant restart or MQTT reload until the next ignition. Add `retain` on your side if that matters.
 - **Doors**: on this motorhome cab doors, habitation door and lockers share one circuit, so `0x380` `b1` only says "some door is open".
 - **Boost, load, intake temperature, ECU voltage and DTCs are not on this bus** (K-line only).
