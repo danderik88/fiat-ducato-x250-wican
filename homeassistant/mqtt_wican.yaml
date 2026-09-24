@@ -1,0 +1,127 @@
+# Home Assistant MQTT entities for the Ducato X250 body CAN, fed by wican/can_filter.json.
+# Include from configuration.yaml with:   mqtt: !include mqtt_wican.yaml
+# Replace <device_id> with your WiCAN id (the topic is shown in the WiCAN web UI).
+#
+# expire_after: the bus goes silent with the key out, so live values turn "unavailable"
+# 15 s after the last frame instead of freezing on a stale value.
+
+sensor:
+  - name: "Ducato Speed"
+    unique_id: ducato_speed
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.speed_kmh if value_json.speed_kmh is defined }}"
+    expire_after: 15
+    unit_of_measurement: "km/h"
+    device_class: speed
+    state_class: measurement
+    suggested_display_precision: 0
+
+  - name: "Ducato RPM"
+    unique_id: ducato_rpm
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.rpm if value_json.rpm is defined }}"
+    expire_after: 15
+    unit_of_measurement: "rpm"
+    state_class: measurement
+    suggested_display_precision: 0
+    icon: mdi:engine
+
+  - name: "Ducato Coolant Temperature"
+    unique_id: ducato_coolant_temperature
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.coolant_c if value_json.coolant_c is defined }}"
+    expire_after: 15
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    suggested_display_precision: 0
+
+  # No expire_after on odometer / range / fuel: they keep their last value while parked.
+  - name: "Ducato Odometer"
+    unique_id: ducato_odometer
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.odometer_km if value_json.odometer_km is defined }}"
+    unit_of_measurement: "km"
+    device_class: distance
+    state_class: total_increasing
+    suggested_display_precision: 0
+
+  - name: "Ducato Range"
+    unique_id: ducato_range
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.range_km if value_json.range_km is defined }}"
+    unit_of_measurement: "km"
+    device_class: distance
+    suggested_display_precision: 0
+    icon: mdi:gas-station-in-use
+
+  # The last frame sent at key-off carries fuel = 0: drop it.
+  - name: "Ducato Fuel"
+    unique_id: ducato_fuel
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.fuel_l if value_json.fuel_l is defined and value_json.fuel_l > 0 }}"
+    unit_of_measurement: "L"
+    suggested_display_precision: 0
+    icon: mdi:gas-station
+
+  # Raw 0x180 (b0<<16 | b1<<8 | b2), used by the turn-signal templates.
+  - name: "Ducato 0x180 raw"
+    unique_id: ducato_0x180_raw
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.raw_180 | int if value_json.raw_180 is defined }}"
+    expire_after: 15
+
+binary_sensor:
+  - name: "Ducato Engine Running"
+    unique_id: ducato_engine_running
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if value_json.engine_running > 0.5 else 'OFF') if value_json.engine_running is defined }}"
+    expire_after: 15
+    device_class: running
+
+  - name: "Ducato Doors"
+    unique_id: ducato_doors
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if value_json.doors > 0 else 'OFF') if value_json.doors is defined }}"
+    expire_after: 15
+    device_class: door
+
+  - name: "Ducato Parking Brake"
+    unique_id: ducato_parking_brake
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if value_json.parking_brake > 0.5 else 'OFF') if value_json.parking_brake is defined }}"
+    expire_after: 15
+    icon: mdi:car-brake-parking
+
+  # 0x180 bits: b0 bit7 brake pedal (0x800000), b1 bit5 side lights (0x2000),
+  # b1 bit3 dipped beam (0x0800), b1 bit4 main beam (0x1000)
+  - name: "Ducato Brake Pedal"
+    unique_id: ducato_brake_pedal
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if (value_json.raw_180 | int | bitwise_and(8388608)) > 0 else 'OFF') if value_json.raw_180 is defined }}"
+    expire_after: 15
+    icon: mdi:car-brake-alert
+
+  - name: "Ducato Side Lights"
+    unique_id: ducato_side_lights
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if (value_json.raw_180 | int | bitwise_and(8192)) > 0 else 'OFF') if value_json.raw_180 is defined }}"
+    expire_after: 15
+    device_class: light
+    icon: mdi:car-parking-lights
+
+  - name: "Ducato Dipped Beam"
+    unique_id: ducato_dipped_beam
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if (value_json.raw_180 | int | bitwise_and(2048)) > 0 else 'OFF') if value_json.raw_180 is defined }}"
+    expire_after: 15
+    device_class: light
+    icon: mdi:car-light-dimmed
+
+  - name: "Ducato Main Beam"
+    unique_id: ducato_main_beam
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if (value_json.raw_180 | int | bitwise_and(4096)) > 0 else 'OFF') if value_json.raw_180 is defined }}"
+    expire_after: 15
+    device_class: light
+    icon: mdi:car-light-high

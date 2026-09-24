@@ -1,0 +1,16 @@
+# Turn signals from the raw 0x180 value (b2: 0x40 left, 0x20 right).
+# The bit follows the blinker (~3 times per second): delay_off keeps the
+# entity "on" between blinks. Include with:   template: !include template_turn_signals.yaml
+- binary_sensor:
+    - name: "Ducato Turn Signal Left"
+      unique_id: ducato_turn_left
+      icon: mdi:arrow-left-bold
+      availability: "{{ has_value('sensor.ducato_0x180_raw') }}"
+      state: "{{ states('sensor.ducato_0x180_raw') | int(0) | bitwise_and(64) > 0 }}"
+      delay_off: 2
+    - name: "Ducato Turn Signal Right"
+      unique_id: ducato_turn_right
+      icon: mdi:arrow-right-bold
+      availability: "{{ has_value('sensor.ducato_0x180_raw') }}"
+      state: "{{ states('sensor.ducato_0x180_raw') | int(0) | bitwise_and(32) > 0 }}"
+      delay_off: 2

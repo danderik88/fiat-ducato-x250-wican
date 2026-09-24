@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 538" font-family="Helvetica, Arial, sans-serif" font-size="12">
+<rect width="980" height="538" fill="#fff"/>
+<text x="490.0" y="26" text-anchor="middle" font-size="17" font-weight="bold" fill="#222">Decoded body-CAN frames (bytes b0…b7, bit 7 = MSB)</text>
+<text x="200.0" y="52" text-anchor="middle" fill="#555">b0</text>
+<text x="300.0" y="52" text-anchor="middle" fill="#555">b1</text>
+<text x="400.0" y="52" text-anchor="middle" fill="#555">b2</text>
+<text x="500.0" y="52" text-anchor="middle" fill="#555">b3</text>
+<text x="600.0" y="52" text-anchor="middle" fill="#555">b4</text>
+<text x="700.0" y="52" text-anchor="middle" fill="#555">b5</text>
+<text x="800.0" y="52" text-anchor="middle" fill="#555">b6</text>
+<text x="900.0" y="52" text-anchor="middle" fill="#555">b7</text>
+<text x="20" y="80" font-weight="bold" font-size="15" fill="#111">0x180</text><text x="20" y="96" fill="#666" font-size="11">4 Hz · DLC 6</text>
+<rect x="150" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="250" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="350" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="450" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="550" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="650" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="750" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="850" y="60" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="152" y="62" width="96" height="26" rx="4" fill="#fde68a" stroke="#6b7280"/>
+<text x="200.0" y="79" text-anchor="middle" fill="#111">brake</text>
+<rect x="252" y="62" width="96" height="26" rx="4" fill="#bbf7d0" stroke="#6b7280"/>
+<text x="300.0" y="79" text-anchor="middle" fill="#111">lights</text>
+<rect x="352" y="62" width="96" height="26" rx="4" fill="#bfdbfe" stroke="#6b7280"/>
+<text x="400.0" y="79" text-anchor="middle" fill="#111">turn</text>
+<text x="150" y="108" fill="#374151" font-size="12">b0 bit7 = brake pedal · b1 bit5 = side lights, bit3 = dipped, bit4 = main beam · b2 0x40 = left, 0x20 = right (blinks)</text>
+<text x="20" y="158" font-weight="bold" font-size="15" fill="#111">0x281</text><text x="20" y="174" fill="#666" font-size="11">20 Hz · DLC 8</text>
+<rect x="150" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="250" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="350" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="450" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="550" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="650" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="750" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="850" y="138" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="252" y="140" width="96" height="26" rx="4" fill="#fecaca" stroke="#6b7280"/>
+<text x="300.0" y="157" text-anchor="middle" fill="#111">engine</text>
+<rect x="452" y="140" width="96" height="26" rx="4" fill="#fde68a" stroke="#6b7280"/>
+<text x="500.0" y="157" text-anchor="middle" fill="#111">coolant</text>
+<rect x="652" y="140" width="196" height="26" rx="4" fill="#bbf7d0" stroke="#6b7280"/>
+<text x="750.0" y="157" text-anchor="middle" fill="#111">RPM</text>
+<text x="150" y="186" fill="#374151" font-size="12">b1 bit7 = 1 engine OFF · coolant °C = b3 − 40 · RPM = (b6·256 + b5) / 8</text>
+<text x="20" y="236" font-weight="bold" font-size="15" fill="#111">0x286</text><text x="20" y="252" fill="#666" font-size="11">10 Hz · DLC 8</text>
+<rect x="150" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="250" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="350" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="450" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="550" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="650" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="750" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="850" y="216" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="352" y="218" width="196" height="26" rx="4" fill="#bfdbfe" stroke="#6b7280"/>
+<text x="450.0" y="235" text-anchor="middle" fill="#111">speed</text>
+<text x="150" y="264" fill="#374151" font-size="12">speed km/h = (b2·256 + b3) / 16  (0x2A0 b0-b1 carries the same value)</text>
+<text x="20" y="314" font-weight="bold" font-size="15" fill="#111">0x380</text><text x="20" y="330" fill="#666" font-size="11">4 Hz · DLC 8</text>
+<rect x="150" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="250" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="350" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="450" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="550" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="650" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="750" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="850" y="294" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="152" y="296" width="96" height="26" rx="4" fill="#fecaca" stroke="#6b7280"/>
+<text x="200.0" y="313" text-anchor="middle" fill="#111">p.brake</text>
+<rect x="252" y="296" width="96" height="26" rx="4" fill="#fde68a" stroke="#6b7280"/>
+<text x="300.0" y="313" text-anchor="middle" fill="#111">doors</text>
+<rect x="652" y="296" width="96" height="26" rx="4" fill="#bbf7d0" stroke="#6b7280"/>
+<text x="700.0" y="313" text-anchor="middle" fill="#111">fuel</text>
+<text x="150" y="342" fill="#374151" font-size="12">b0 bit5 = parking brake on · b1 = 0x0C if any door is open · b5 = fuel, probably litres (unconfirmed)</text>
+<text x="20" y="392" font-weight="bold" font-size="15" fill="#111">0x603</text><text x="20" y="408" fill="#666" font-size="11">1 Hz · DLC 8</text>
+<rect x="150" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="250" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="350" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="450" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="550" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="650" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="750" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="850" y="372" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="252" y="374" width="296" height="26" rx="4" fill="#bfdbfe" stroke="#6b7280"/>
+<text x="400.0" y="391" text-anchor="middle" fill="#111">odometer</text>
+<rect x="552" y="374" width="196" height="26" rx="4" fill="#bbf7d0" stroke="#6b7280"/>
+<text x="650.0" y="391" text-anchor="middle" fill="#111">range</text>
+<text x="150" y="420" fill="#374151" font-size="12">odometer km = low nibble b1 + b2 + b3 (20 bits) · range km = b4 bits 2-0 + b5 (11 bits; b4 bit3 = engine-running flag)</text>
+<text x="20" y="470" font-weight="bold" font-size="15" fill="#111">0x683</text><text x="20" y="486" fill="#666" font-size="11">1 Hz · DLC 6</text>
+<rect x="150" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="250" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="350" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="450" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="550" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="650" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="750" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="850" y="450" width="100" height="30" fill="#f9fafb" stroke="#d1d5db"/>
+<rect x="152" y="452" width="196" height="26" rx="4" fill="#e9d5ff" stroke="#6b7280"/>
+<text x="250.0" y="469" text-anchor="middle" fill="#111">clock</text>
+<text x="150" y="498" fill="#374151" font-size="12">b0 = hours, b1 = minutes, BCD (0x16 0x50 = 16:50), dashboard clock</text>
+</svg>
