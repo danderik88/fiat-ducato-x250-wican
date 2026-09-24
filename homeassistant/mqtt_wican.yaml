@@ -64,13 +64,13 @@ sensor:
 
   # Trip computer. Digits are BCD: 0x116 = 11.6 L/100km. Each WiCAN filter arrives
   # as its own message, so every sensor reads a single raw filter.
+  # To be verified while driving. 0 with the engine off (the cluster keeps a fixed value at standstill).
   - name: "Ducato Instant Consumption"
     unique_id: ducato_instant_consumption
     state_topic: "wican/<device_id>/can/rx"
     value_template: >-
-      {% if value_json.raw_603_b01 is defined %}{% set d = (value_json.raw_603_b01 | int) // 16 %}
-      {{ (d // 256) % 16 * 10 + (d // 16) % 16 + (d % 16) / 10 }}{% endif %}
-    expire_after: 15
+      {% if value_json.raw_603_b01 is defined %}{% if is_state('binary_sensor.ducato_engine_running', 'on') %}{% set d = (value_json.raw_603_b01 | int) // 16 %}
+      {{ (d // 256) % 16 * 10 + (d // 16) % 16 + (d % 16) / 10 }}{% else %}0{% endif %}{% endif %}
     unit_of_measurement: "L/100km"
     icon: mdi:gauge
 

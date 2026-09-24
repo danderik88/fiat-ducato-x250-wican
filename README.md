@@ -80,7 +80,7 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x39A` | driver seatbelt | `b2` bit 0, **1 = unbuckled** (also `0x3C3` `b4` bit 1) |
 | `0x603` | odometer | 20 bits from `b1` low nibble → km |
 | `0x603` | range | 11 bits: `b4` bits 2-0 + `b5` → km |
-| `0x603` | instant consumption | `b0` + `b1` high nibble, BCD → L/100km (`11 6x` = 11.6) |
+| `0x603` | instant consumption *(to be verified while driving)* | `b0` + `b1` high nibble, BCD → L/100km (`11 6x` = 11.6) |
 | `0x643` | trip: average consumption | `b0` + `b1` high nibble, BCD → L/100km |
 | `0x643` | trip: average speed | `b2` km/h |
 | `0x643` | trip: time | `b3` hours, `b4` minutes, BCD |

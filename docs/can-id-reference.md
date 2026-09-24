@@ -27,7 +27,7 @@ Every value was checked on the vehicle (instrument cluster, GPS or a repeated ma
 | `0x603` | 1 Hz | 8 | Odometer | 20 bits: low nibble of `b1`, `b2`, `b3` → km | 61744 = cluster, +7 km after a 7 km drive |
 | | | | Range (distance to empty) | 11 bits: `b4` bits 2-0, `b5` → km | 272 = cluster |
 | | | | (engine-running flag) | `b4` bit 3 | — exclude it from the range, or you get 2265 km |
-| | | | Instant consumption | `b0` + high nibble of `b1`, **BCD** digits → L/100km (`11 6x` = 11.6) | same as the cluster trip computer at idle; follows the load in a drive capture (2.0 on overrun, 25.0 full scale) |
+| | | | Instant consumption *(to be verified while driving)* | `b0` + high nibble of `b1`, **BCD** digits → L/100km (`11 6x` = 11.6) | same as the cluster trip computer at idle; follows the load in a drive capture (2.0 on overrun, 25.0 full scale) |
 | `0x643` | 1 Hz | 8 | Trip: average consumption | `b0` + high nibble of `b1`, BCD → L/100km | 11.7 = cluster; 15.3 after a reset at idle |
 | | | | Trip: average speed | `b2` km/h (truncated) | 48 = cluster; equals distance / time on 3 samples |
 | | | | Trip: time | `b3` hours, `b4` minutes, BCD (`47 37` = 47 h 37 min) | cluster; minutes tick `19` → `20` |
