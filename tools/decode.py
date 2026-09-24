@@ -11,15 +11,17 @@ def decode(can_id, d):
     """Return {signal: value} for one frame. d = bytes."""
     if can_id == 0x180 and len(d) >= 3:
         return {"brake_pedal": d[0] >> 7 & 1, "side_lights": d[1] >> 5 & 1,
-                "dipped_beam": d[1] >> 3 & 1, "main_beam": d[1] >> 4 & 1,
+                "dipped_beam": d[1] >> 3 & 1, "main_beam": d[1] >> 4 & 1, "rear_fog": d[1] >> 1 & 1,
                 "turn_left": int(d[2] & 0x40 > 0), "turn_right": int(d[2] & 0x20 > 0)}
     if can_id == 0x281 and len(d) >= 7:
         return {"engine_running": 1 - (d[1] >> 7), "coolant_c": d[3] - 40,
                 "rpm": (d[6] * 256 + d[5]) / 8}
     if can_id == 0x286 and len(d) >= 4:
         return {"speed_kmh": (d[2] * 256 + d[3]) / 16}
-    if can_id == 0x380 and len(d) >= 6:
-        return {"parking_brake": d[0] >> 5 & 1, "doors_open": int(d[1] != 0), "fuel_l": d[5]}
+    if can_id == 0x380 and len(d) >= 3:
+        return {"parking_brake": d[0] >> 5 & 1, "doors_open": int(d[1] != 0), "reverse": d[2] >> 2 & 1}
+    if can_id == 0x39A and len(d) >= 3:
+        return {"seatbelt_unbuckled": d[2] & 1}
     if can_id == 0x603 and len(d) >= 6:
         return {"odometer_km": (d[1] & 0x0F) << 16 | d[2] << 8 | d[3],
                 "range_km": (d[4] & 0x07) << 8 | d[5]}
@@ -42,7 +44,8 @@ def test():
     assert decode(0x281, bytes.fromhex("0080803800000000")) == {"engine_running": 0, "coolant_c": 16, "rpm": 0}
     assert decode(0x281, bytes.fromhex("00008038 01F81900".replace(" ", "")))["rpm"] == 831.0
     assert decode(0x603, bytes.fromhex("2500F13081100000")) == {"odometer_km": 61744, "range_km": 272}
-    assert decode(0x380, bytes.fromhex("200C485300170B04")) == {"parking_brake": 1, "doors_open": 1, "fuel_l": 23}
+    assert decode(0x380, bytes.fromhex("200C485300170B04")) == {"parking_brake": 1, "doors_open": 1, "reverse": 0}
+    assert decode(0x39A, bytes.fromhex("0001010000000000")) == {"seatbelt_unbuckled": 1}
     assert decode(0x683, bytes.fromhex("165022062006")) == {"clock": "16:50"}
     assert parse("0.045 t1806000000000000") == (0.045, 0x180, bytes(6))
     print("ok")

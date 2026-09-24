@@ -4,7 +4,7 @@ Decoded **CAN IDs of the Fiat Ducato X250** (2009) body CAN, plus a step-by-step
 
 What you get from the OBD socket, live while the ignition is on:
 
-**speed · RPM · coolant temperature · engine running · odometer · range · fuel level · doors · parking brake · brake pedal · side lights · dipped / main beam · turn signals · dashboard clock**
+**speed · RPM · coolant temperature · engine running · odometer · range · doors · parking brake · brake pedal · reverse gear · driver seatbelt · side lights · dipped / main beam · rear fog · turn signals · dashboard clock**
 
 ![Home Assistant view on the head unit](images/ha-head-unit-view.png)
 *Home Assistant dashboard on the head unit: gauges and the row of "tell-tales" (turn signals, lights, parking brake, doors) come from the CAN bus. For this screenshot the tell-tale states were injected by hand while parked; the other values are real.*
@@ -40,14 +40,14 @@ What you get from the OBD socket, live while the ignition is on:
 
 ![The van](images/vehicle.jpg)
 
-The same platform is sold as **Citroën Jumper** and **Peugeot Boxer** (2006–2014); the body CAN is likely similar, but only the Ducato above has been tested. Later X250/X290 facelifts may differ — see [Contributing](#contributing).
+The same platform is sold as **Citroën Jumper** and **Peugeot Boxer** (2006–2014); only the Ducato above has been tested.
 
 ## How it works
 
 ![Architecture](images/architecture.svg)
 
 - The OBD socket of this Ducato does **not** carry the engine CAN. Pins 6/14 carry the **body CAN at 50 kbit/s**, and at 500 kbit/s there is nothing. The engine ECU talks OBD over the **K-line** (pin 7).
-- Many engine values are still broadcast on the body CAN for the instrument cluster (RPM, coolant, speed, odometer, range, fuel), so a CAN-only dongle can read them by **listening**, without sending a single OBD request.
+- Many engine values are still broadcast on the body CAN for the instrument cluster (RPM, coolant, speed, odometer, range), so a CAN-only dongle can read them by **listening**, without sending a single OBD request.
 - The WiCAN decodes the frames itself (its "MQTT filter" feature) and publishes plain JSON such as `{"rpm": 830, "coolant_c": 81}` to an MQTT broker. Home Assistant turns each field into a sensor.
 
 ## The OBD socket
@@ -68,6 +68,7 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 |---|---|---|
 | `0x180` | brake pedal | `b0` bit 7 |
 | `0x180` | side lights / dipped / main beam | `b1` bit 5 / bit 3 / bit 4 |
+| `0x180` | rear fog light | `b1` bit 1 |
 | `0x180` | turn signal left / right | `b2` `0x40` / `0x20` (blinks) |
 | `0x281` | engine running | `b1` bit 7, **1 = off** |
 | `0x281` | coolant temperature | `b3 − 40` °C |
@@ -75,12 +76,13 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x286` | speed | `(b2·256 + b3) / 16` km/h (also `0x2A0` `b0-b1`) |
 | `0x380` | parking brake | `b0` bit 5 |
 | `0x380` | any door open | `b1 = 0x0C` |
-| `0x380` | fuel | `b5`, probably litres (unconfirmed) |
+| `0x380` | reverse gear | `b2` bit 2 |
+| `0x39A` | driver seatbelt | `b2` bit 0, **1 = unbuckled** (also `0x3C3` `b4` bit 1) |
 | `0x603` | odometer | 20 bits from `b1` low nibble → km |
 | `0x603` | range | 11 bits: `b4` bits 2-0 + `b5` → km |
 | `0x683` | dashboard clock | `b0` h, `b1` min, BCD |
 
-Full details, verification notes and the **11 IDs not decoded yet**: [docs/can-id-reference.md](docs/can-id-reference.md).
+Full details and verification notes: [docs/can-id-reference.md](docs/can-id-reference.md).
 
 ## Step-by-step setup
 
@@ -141,11 +143,10 @@ Real data from a short evening drive, as recorded by Home Assistant:
 ## Gotchas
 
 - **The bus is completely silent with the key out.** Nothing can be read while parked. Live sensors use `expire_after: 15` so they go `unavailable` instead of freezing; hide them in dashboards with a `visibility` condition (`state_not: [unavailable, unknown]`).
-- **The last frame at key-off lies.** Just before going silent the bus sends one frame with odd values: fuel `0`, parking brake released, engine still running. The fuel sensor drops `0`; don't build automations on the key-off edge.
-- **Odometer, range and fuel have no expiry**, so they keep the last value while parked, but they become `unknown` after a Home Assistant restart or MQTT reload until the next ignition. Add `retain` on your side if that matters.
+- **The last frame at key-off lies.** Just before going silent the bus sends one frame with odd values: parking brake released, engine still running. Don't build automations on the key-off edge.
+- **Odometer and range have no expiry**, so they keep the last value while parked, but they become `unknown` after a Home Assistant restart or MQTT reload until the next ignition. Add `retain` on your side if that matters.
 - **Doors**: on this motorhome cab doors, habitation door and lockers share one circuit, so `0x380` `b1` only says "some door is open".
-- **Fuel in litres is unconfirmed.** `b5 = 23` matched ~26 % of a 90 L tank while the OBD fuel PID said 24 %. It will be checked at the next full tank.
-- **Boost, load, intake temperature, ECU voltage and DTCs are not on this bus** (K-line only). Options: a Y-splitter with an ELM327 app (e.g. Torque) on the K-line next to the WiCAN, or a WiCAN Pro, which MeatPi lists with K-line support (not tested here).
+- **Boost, load, intake temperature, ECU voltage and DTCs are not on this bus** (K-line only).
 - **WiCAN sleep**: with sleep enabled it sleeps below 13.1 V for 16 min and wakes above 13.5 V (engine running), which avoids draining the starter battery.
 
 ## Sniffing it yourself
@@ -164,8 +165,6 @@ The script sends `C`, `S2` (50 kbit/s) and `L` (listen-only) and records every f
 
 **Found a new CAN ID, a better decoding, or data from another Ducato / Jumper / Boxer? Please share it.** Open an issue with the *New CAN ID* template or send a pull request. The process, and what not to post (VIN, plate, GPS, passwords), is in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Wanted in particular: the 11 IDs still unknown, confirmation of the fuel scaling, and captures from other model years.
-
 ## Disclaimer
 
 This is a **hobby project**, shared for information only, with **no warranty of any kind** (see [LICENSE](LICENSE)).
@@ -180,7 +179,7 @@ This is a **hobby project**, shared for information only, with **no warranty of 
 
 This project was done together with an AI coding agent ([Claude Code](https://claude.com/claude-code) by Anthropic). The agent drove the WiCAN captures over the network, searched the recordings for changing bytes, proposed the decodings, wrote the tools and the Home Assistant configuration, and drafted this documentation.
 
-Every action in the captures (doors, lights, pedals, engine, the drive) was done by hand on the real vehicle, and every decoding in the "decoded" table was checked against the instrument cluster, GPS or the OBD values before being listed. Anything not confirmed that way is marked as unconfirmed. If you find a mistake, please [open an issue](../../issues).
+Every action in the captures (doors, lights, pedals, engine, the drive) was done by hand on the real vehicle, and every decoding in the "decoded" table was checked against the instrument cluster, GPS or the OBD values before being listed. Anything not confirmed that way is left out. If you find a mistake, please [open an issue](../../issues).
 
 ## License
 

@@ -7,6 +7,7 @@
 {"CANID":1539,"Name":"range_km","PID":-1,"PIDIndex":0,"StartBit":37,"BitLength":11,"Expression":"V","Cycle":5000},
 {"CANID":896,"Name":"doors","PID":-1,"PIDIndex":0,"StartBit":8,"BitLength":8,"Expression":"V","Cycle":1000},
 {"CANID":896,"Name":"parking_brake","PID":-1,"PIDIndex":0,"StartBit":2,"BitLength":1,"Expression":"V","Cycle":1000},
-{"CANID":896,"Name":"fuel_l","PID":-1,"PIDIndex":0,"StartBit":40,"BitLength":8,"Expression":"V","Cycle":1000},
+{"CANID":896,"Name":"raw_380_b2","PID":-1,"PIDIndex":0,"StartBit":16,"BitLength":8,"Expression":"V","Cycle":1000},
+{"CANID":922,"Name":"raw_39a_b2","PID":-1,"PIDIndex":0,"StartBit":16,"BitLength":8,"Expression":"V","Cycle":1000},
 {"CANID":384,"Name":"raw_180","PID":-1,"PIDIndex":0,"StartBit":0,"BitLength":24,"Expression":"V","Cycle":200}
 ]}
