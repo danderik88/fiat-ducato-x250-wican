@@ -22,7 +22,7 @@ Every value was checked on the vehicle (instrument cluster, GPS or a repeated ma
 | `0x380` | 4 Hz | 8 | Parking brake | `b0` bit 5 | lever |
 | | | | Doors | `b1` = `0x0C` when **any** door is open, `0x00` all closed | cab, habitation door, lockers: one shared circuit on this motorhome |
 | | | | Reverse gear | `b2` bit 2 | reverse in/out 3 times |
-| `0x39A` | 4 Hz | 8 | Driver seatbelt | `b2` bit 0: `1` = **unbuckled** | buckle/unbuckle 3 times (the passenger belt is not on the bus) |
+| `0x39A` | 4 Hz | 8 | Driver seatbelt | `b2` bit 0: `1` = **unbuckled** | buckle/unbuckle 3 times; follows the cluster warning light, which is driver-only (the passenger belt is not on the bus, even with the seat occupied) |
 | `0x3C3` | 2 Hz | 8 | Driver seatbelt (copy) | `b4` bit 1, same as `0x39A` | same test |
 | `0x603` | 1 Hz | 8 | Odometer | 20 bits: low nibble of `b1`, `b2`, `b3` → km | 61744 = cluster, +7 km after a 7 km drive |
 | | | | Range (distance to empty) | 11 bits: `b4` bits 2-0, `b5` → km | 272 = cluster |
