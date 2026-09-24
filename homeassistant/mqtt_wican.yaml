@@ -36,6 +36,17 @@ sensor:
     state_class: measurement
     suggested_display_precision: 0
 
+  # Raw byte from the WiCAN, scaled here (0.16 V per step).
+  - name: "Ducato Starter Battery Voltage"
+    unique_id: ducato_starter_battery_voltage
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ (value_json.raw_380_b3 * 0.16) | round(2) if value_json.raw_380_b3 is defined }}"
+    expire_after: 15
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    suggested_display_precision: 1
+
   # No expire_after on odometer / range: they keep their last value while parked.
   - name: "Ducato Odometer"
     unique_id: ducato_odometer

@@ -6,7 +6,7 @@ Decoded **CAN IDs of the Fiat Ducato X250** (2009) body CAN, plus a step-by-step
 
 What you get from the OBD socket, live while the ignition is on:
 
-**speed · RPM · coolant temperature · engine running · odometer · range · doors · parking brake · brake pedal · reverse gear · driver seatbelt · trip computer (instant / average consumption, trip distance, time, average speed) · side lights · dipped / main beam · rear fog · turn signals · dashboard clock**
+**speed · RPM · coolant temperature · engine running · odometer · range · doors · parking brake · brake pedal · reverse gear · driver seatbelt · starter battery voltage · trip computer (instant / average consumption, trip distance, time, average speed) · side lights · dipped / main beam · rear fog · turn signals · dashboard clock**
 
 ![Home Assistant view on the head unit](images/ha-head-unit-view.png)
 *Home Assistant dashboard on the head unit: gauges and the row of "tell-tales" (turn signals, lights, parking brake, doors) come from the CAN bus. For this screenshot the tell-tale states were injected by hand while parked; the other values are real.*
@@ -79,6 +79,7 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x380` | parking brake | `b0` bit 5 |
 | `0x380` | any door open | `b1 = 0x0C` |
 | `0x380` | reverse gear | `b2` bit 2 |
+| `0x380` | starter battery voltage | `b3 × 0.16` V (also `0x3E0` `b1`) |
 | `0x39A` | driver seatbelt | `b2` bit 0, **1 = unbuckled** (also `0x3C3` `b4` bit 1) |
 | `0x603` | odometer | 20 bits from `b1` low nibble → km |
 | `0x603` | range | 11 bits: `b4` bits 2-0 + `b5` → km |
@@ -154,7 +155,7 @@ Real data from a short evening drive, as recorded by Home Assistant:
 - **Don't use `0x281` `b1` bit 7 as "engine running".** It is `1` only with the ignition on and the engine stopped. At key-off (STOP) it reads "running" in the last frame, and after a drive the engine ECU keeps sending `0x281` for ~20 s with the bit at "running" and RPM at 0. RPM > 300 is right in every case (tested 3 times: key-on only, start/stop, stop after running).
 - **Odometer and range have no expiry**, so they keep the last value while parked, but they become `unknown` after a Home Assistant restart or MQTT reload until the next ignition. Add `retain` on your side if that matters.
 - **Doors**: on this motorhome cab doors, habitation door and lockers share one circuit, so `0x380` `b1` only says "some door is open".
-- **Boost, load, intake temperature, ECU voltage and DTCs are not on this bus** (K-line only).
+- **Boost, load, intake temperature and DTCs are not on this bus** (K-line only). Battery voltage is: `0x380` `b3`, as the body computer sees it.
 - **WiCAN sleep**: with sleep enabled it sleeps below 13.1 V for 16 min and wakes above 13.5 V (engine running), which avoids draining the starter battery.
 
 ## Sniffing it yourself

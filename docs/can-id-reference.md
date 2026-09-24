@@ -22,6 +22,7 @@ Every value was checked on the vehicle (instrument cluster, GPS or a repeated ma
 | `0x380` | 4 Hz | 8 | Parking brake | `b0` bit 5 | lever |
 | | | | Doors | `b1` = `0x0C` when **any** door is open, `0x00` all closed | cab, habitation door, lockers: one shared circuit on this motorhome |
 | | | | Reverse gear | `b2` bit 2 | reverse in/out 3 times |
+| | | | Starter battery voltage | `b3 × 0.16` V (`0x53` = 13.3 V) | against a Victron SmartShunt on the starter battery over a 20 min drive: raw 88 / 89 / 90 = 14.08 / 14.24 / 14.40 V vs 14.1 / 14.2 / 14.26 V measured; 82-84 with the engine off, 88-91 running |
 | `0x39A` | 4 Hz | 8 | Driver seatbelt | `b2` bit 0: `1` = **unbuckled** | buckle/unbuckle 3 times; follows the cluster warning light, which is driver-only (the passenger belt is not on the bus, even with the seat occupied) |
 | `0x3C3` | 2 Hz | 8 | Driver seatbelt (copy) | `b4` bit 1, same as `0x39A` | same test |
 | `0x603` | 1 Hz | 8 | Odometer | 20 bits: low nibble of `b1`, `b2`, `b3` → km | 61744 = cluster, +7 km after a 7 km drive |
@@ -32,8 +33,9 @@ Every value was checked on the vehicle (instrument cluster, GPS or a repeated ma
 | | | | Trip: average speed | `b2` km/h (truncated) | 48 = cluster; equals distance / time on 3 samples |
 | | | | Trip: time | `b3` hours, `b4` minutes, BCD (`47 37` = 47 h 37 min) | cluster; minutes tick `19` → `20` |
 | | | | Trip: distance | 20 bits: `b5`, `b6`, high nibble of `b7` → × 0.1 km | 2329.2 = cluster; 0.0 after a trip reset; +0.1 per ~100 m of wheel-speed distance |
+| `0x3E0` | 2 Hz | 4 | Starter battery voltage (copy) | `b1 × 0.16` V, same as `0x380` `b3` | same test |
 | `0x683` | 1 Hz | 6 | Dashboard clock | `b0` hours, `b1` minutes, BCD (`16 50` = 16:50) | cluster clock (~3 min slow on this van) |
 
 ## Not on this bus
 
-Boost pressure, engine load, intake temperature, ECU battery voltage and fault codes come from the engine ECU over the **K-line** (OBD pin 7, ISO 14230-4 KWP2000). A CAN-only dongle cannot see them.
+Boost pressure, engine load, intake temperature and fault codes come from the engine ECU over the **K-line** (OBD pin 7, ISO 14230-4 KWP2000). A CAN-only dongle cannot see them.
