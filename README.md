@@ -25,6 +25,7 @@ What you get from the OBD socket, live while the ignition is on:
 - [Sniffing it yourself](#sniffing-it-yourself)
 - [Contributing](#contributing)
 - [Disclaimer](#disclaimer)
+- [How this was made](#how-this-was-made)
 
 ## Vehicle
 
@@ -174,6 +175,12 @@ This is a **hobby project**, shared for information only, with **no warranty of 
 - Decodings come from **one vehicle** and may be wrong or different on yours. Do **not** rely on them for anything safety-related, and never let a dashboard distract you while driving.
 - Check that a permanent OBD device is allowed by your local rules, insurance and warranty.
 - Fiat, Ducato, Citroën, Jumper, Peugeot, Boxer, Elnagh, WiCAN, MeatPi and Home Assistant are trademarks of their respective owners. This project is **not affiliated** with or endorsed by any of them.
+
+## How this was made
+
+This project was done together with an AI coding agent ([Claude Code](https://claude.com/claude-code) by Anthropic). The agent drove the WiCAN captures over the network, searched the recordings for changing bytes, proposed the decodings, wrote the tools and the Home Assistant configuration, and drafted this documentation.
+
+Every action in the captures (doors, lights, pedals, engine, the drive) was done by hand on the real vehicle, and every decoding in the "decoded" table was checked against the instrument cluster, GPS or the OBD values before being listed. Anything not confirmed that way is marked as unconfirmed. If you find a mistake, please [open an issue](../../issues).
 
 ## License
 
