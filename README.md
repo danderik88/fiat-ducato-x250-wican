@@ -4,7 +4,7 @@ Decoded **CAN IDs of the Fiat Ducato X250** (2009) body CAN, plus a step-by-step
 
 What you get from the OBD socket, live while the ignition is on:
 
-**speed · RPM · coolant temperature · engine running · odometer · range · doors · parking brake · brake pedal · reverse gear · driver seatbelt · side lights · dipped / main beam · rear fog · turn signals · dashboard clock**
+**speed · RPM · coolant temperature · engine running · odometer · range · doors · parking brake · brake pedal · reverse gear · driver seatbelt · trip computer (instant / average consumption, trip distance, time, average speed) · side lights · dipped / main beam · rear fog · turn signals · dashboard clock**
 
 ![Home Assistant view on the head unit](images/ha-head-unit-view.png)
 *Home Assistant dashboard on the head unit: gauges and the row of "tell-tales" (turn signals, lights, parking brake, doors) come from the CAN bus. For this screenshot the tell-tale states were injected by hand while parked; the other values are real.*
@@ -80,6 +80,11 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x39A` | driver seatbelt | `b2` bit 0, **1 = unbuckled** (also `0x3C3` `b4` bit 1) |
 | `0x603` | odometer | 20 bits from `b1` low nibble → km |
 | `0x603` | range | 11 bits: `b4` bits 2-0 + `b5` → km |
+| `0x603` | instant consumption | `b0` + `b1` high nibble, BCD → L/100km (`11 6x` = 11.6) |
+| `0x643` | trip: average consumption | `b0` + `b1` high nibble, BCD → L/100km |
+| `0x643` | trip: average speed | `b2` km/h |
+| `0x643` | trip: time | `b3` hours, `b4` minutes, BCD |
+| `0x643` | trip: distance | 20 bits: `b5`, `b6`, `b7` high nibble → × 0.1 km |
 | `0x683` | dashboard clock | `b0` h, `b1` min, BCD |
 
 Full details and verification notes: [docs/can-id-reference.md](docs/can-id-reference.md).

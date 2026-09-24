@@ -7,6 +7,11 @@ Usage:  python3 decode.py ../captures/05_short-drive.slcan.txt     -> CSV on std
 import sys
 
 
+def bcd3(b0, b1):
+    """3 BCD digits (b0, high nibble of b1) -> xx.x"""
+    return (b0 >> 4) * 10 + (b0 & 15) + (b1 >> 4) / 10
+
+
 def decode(can_id, d):
     """Return {signal: value} for one frame. d = bytes."""
     if can_id == 0x180 and len(d) >= 3:
@@ -25,7 +30,10 @@ def decode(can_id, d):
         return {"seatbelt_unbuckled": d[2] & 1}
     if can_id == 0x603 and len(d) >= 6:
         return {"odometer_km": (d[1] & 0x0F) << 16 | d[2] << 8 | d[3],
-                "range_km": (d[4] & 0x07) << 8 | d[5]}
+                "range_km": (d[4] & 0x07) << 8 | d[5], "instant_l100km": bcd3(d[0], d[1])}
+    if can_id == 0x643 and len(d) >= 8:
+        return {"trip_avg_l100km": bcd3(d[0], d[1]), "trip_avg_kmh": d[2],
+                "trip_time": f"{d[3]:x}:{d[4]:02x}", "trip_km": (d[5] << 12 | d[6] << 4 | d[7] >> 4) / 10}
     if can_id == 0x683 and len(d) >= 2:
         return {"clock": f"{d[0]:02x}:{d[1]:02x}"}  # BCD
     return {}
@@ -45,7 +53,10 @@ def test():
     assert decode(0x281, bytes.fromhex("0080803800000000")) == {"engine_running": 0, "coolant_c": 16, "rpm": 0}
     assert decode(0x281, bytes.fromhex("00008038 01F81900".replace(" ", "")))["rpm"] == 831.0
     assert decode(0x281, bytes.fromhex("0000803900000000"))["engine_running"] == 0  # after-run: bit7 lies, rpm 0
-    assert decode(0x603, bytes.fromhex("2500F13081100000")) == {"odometer_km": 61744, "range_km": 272}
+    assert decode(0x603, bytes.fromhex("2500F13081100000")) == {"odometer_km": 61744, "range_km": 272, "instant_l100km": 25.0}
+    assert decode(0x603, bytes.fromhex("1160F13081100000"))["instant_l100km"] == 11.6
+    assert decode(0x643, bytes.fromhex("11783047370" "5AFC0")) == {
+        "trip_avg_l100km": 11.7, "trip_avg_kmh": 48, "trip_time": "47:37", "trip_km": 2329.2}
     assert decode(0x380, bytes.fromhex("200C485300170B04")) == {"parking_brake": 1, "doors_open": 1, "reverse": 0}
     assert decode(0x39A, bytes.fromhex("0001010000000000")) == {"seatbelt_unbuckled": 1}
     assert decode(0x683, bytes.fromhex("165022062006")) == {"clock": "16:50"}
