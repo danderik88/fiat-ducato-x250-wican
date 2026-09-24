@@ -2,6 +2,8 @@
 
 Decoded **CAN IDs of the Fiat Ducato X250** (2009) body CAN, plus a step-by-step guide to read them with a **MeatPi WiCAN** OBD dongle and use them in **Home Assistant** over MQTT. No cloud, no app, listen-only.
 
+> 🚧 **Work in progress.** New signals are added as soon as they are verified on the vehicle; the goal is to decode more and more of what this bus carries. Only verified decodings are listed here.
+
 What you get from the OBD socket, live while the ignition is on:
 
 **speed · RPM · coolant temperature · engine running · odometer · range · doors · parking brake · brake pedal · reverse gear · driver seatbelt · trip computer (instant / average consumption, trip distance, time, average speed) · side lights · dipped / main beam · rear fog · turn signals · dashboard clock**
