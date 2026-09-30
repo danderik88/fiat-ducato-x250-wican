@@ -81,7 +81,7 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x380` | reverse gear | `b2` bit 2 |
 | `0x380` | starter battery voltage | `b3 × 0.16` V (also `0x3E0` `b1`) |
 | `0x380` | low-fuel warning | `b4` bit 1 |
-| `0x380` | fuel level | `b5`, probably litres (see Gotchas) |
+| `0x380` | fuel level | `b5` → litres |
 | `0x39A` | driver seatbelt | `b2` bit 0, **1 = unbuckled** (also `0x3C3` `b4` bit 1) |
 | `0x603` | odometer | 20 bits from `b1` low nibble → km |
 | `0x603` | range | 11 bits: `b4` bits 2-0 + `b5` → km |
@@ -157,7 +157,6 @@ Real data from a short evening drive, as recorded by Home Assistant:
 - **Don't use `0x281` `b1` bit 7 as "engine running".** It is `1` only with the ignition on and the engine stopped. At key-off (STOP) it reads "running" in the last frame, and after a drive the engine ECU keeps sending `0x281` for ~20 s with the bit at "running" and RPM at 0. RPM > 300 is right in every case (tested 3 times: key-on only, start/stop, stop after running).
 - **Odometer, range and fuel have no expiry**, so they keep the last value while parked, but they become `unknown` after a Home Assistant restart or MQTT reload until the next ignition. Add `retain` on your side if that matters.
 - **Doors**: on this motorhome cab doors, habitation door and lockers share one circuit, so `0x380` `b1` only says "some door is open".
-- **Fuel: litres or percent is not settled yet.** `b5` follows the gauge (full to reserve on Tidle999's van, 23 → 11 on this one), but the unit is open: 91 with a full 90 L tank (Tidle999's van) points to litres, while `b5 = 23` against 24 % from the OBD fuel PID fits percent slightly better. It will be checked against the litres on a pump receipt.
 - **Boost, load, intake temperature and DTCs are not on this bus** (K-line only). Battery voltage is: `0x380` `b3`, as the body computer sees it.
 - **WiCAN sleep**: with sleep enabled it sleeps below 13.1 V for 16 min and wakes above 13.5 V (engine running), which avoids draining the starter battery.
 

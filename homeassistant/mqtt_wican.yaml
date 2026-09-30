@@ -66,11 +66,11 @@ sensor:
     suggested_display_precision: 0
     icon: mdi:gas-station-in-use
 
-  # 0x380 b5, probably litres. The last frame sent at key-off carries fuel = 0: drop it.
+  # 0x380 b5 = litres. The last frame sent at key-off carries fuel = 0: drop it.
   - name: "Ducato Fuel"
     unique_id: ducato_fuel
     state_topic: "wican/<device_id>/can/rx"
-    value_template: "{{ value_json.fuel if value_json.fuel is defined and value_json.fuel > 0 }}"
+    value_template: "{{ value_json.fuel_l if value_json.fuel_l is defined and value_json.fuel_l > 0 }}"
     unit_of_measurement: "L"
     state_class: measurement
     suggested_display_precision: 0
