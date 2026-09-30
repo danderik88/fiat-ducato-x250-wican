@@ -24,7 +24,7 @@ Every value was checked on the vehicle (instrument cluster, GPS or a repeated ma
 | | | | Reverse gear | `b2` bit 2 | reverse in/out 3 times |
 | | | | Starter battery voltage | `b3 × 0.16` V (`0x53` = 13.3 V) | against a Victron SmartShunt on the starter battery over a 20 min drive: raw 88 / 89 / 90 = 14.08 / 14.24 / 14.40 V vs 14.1 / 14.2 / 14.26 V measured; 82-84 with the engine off, 88-91 running |
 | | | | Low-fuel warning | `b4` bit 1 (`0x02` in reserve, `0x00` otherwise) | `0x02` with the cluster reserve light on (b5 = 11, range 110 km); always `0x00` with b5 between 17 and 23; same in Tidle999's reserve frames (b5 = 10-11) |
-| | | | Fuel level | `b5` → litres | a full 90 L tank reads 91 (percent would read ~100); follows the gauge from full to reserve (11) and back after refuelling over weeks of driving on Tidle999's van; 23 → 17 over drives here; 23 = 26 % vs 24 % from the OBD fuel PID. Reads `0` in the key-off frame |
+| | | | Fuel level | `b5` → litres | a full 90 L tank reads 91 on Tidle999's van (percent would read ~100), to be cross-checked on this van at the next refuel; follows the gauge from full to reserve (11) and back after refuelling over weeks of driving on Tidle999's van; 23 → 17 over drives here; 23 = 26 % vs 24 % from the OBD fuel PID. Reads `0` in the key-off frame |
 | `0x39A` | 4 Hz | 8 | Driver seatbelt | `b2` bit 0: `1` = **unbuckled** | buckle/unbuckle 3 times; follows the cluster warning light, which is driver-only (the passenger belt is not on the bus, even with the seat occupied) |
 | `0x3C3` | 2 Hz | 8 | Driver seatbelt (copy) | `b4` bit 1, same as `0x39A` | same test |
 | `0x603` | 1 Hz | 8 | Odometer | 20 bits: low nibble of `b1`, `b2`, `b3` → km | 61744 = cluster, +7 km after a 7 km drive |

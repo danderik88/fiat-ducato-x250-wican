@@ -81,7 +81,7 @@ The socket is under the dashboard, left of the steering column, next to the fuse
 | `0x380` | reverse gear | `b2` bit 2 |
 | `0x380` | starter battery voltage | `b3 × 0.16` V (also `0x3E0` `b1`) |
 | `0x380` | low-fuel warning | `b4` bit 1 |
-| `0x380` | fuel level | `b5` → litres |
+| `0x380` | fuel level | `b5` → litres (Tidle999's full-tank test; to be cross-checked here at the next refuel) |
 | `0x39A` | driver seatbelt | `b2` bit 0, **1 = unbuckled** (also `0x3C3` `b4` bit 1) |
 | `0x603` | odometer | 20 bits from `b1` low nibble → km |
 | `0x603` | range | 11 bits: `b4` bits 2-0 + `b5` → km |
