@@ -24,9 +24,9 @@ def decode(can_id, d):
         return {"engine_running": int(rpm > 300), "coolant_c": d[3] - 40, "rpm": rpm}
     if can_id == 0x286 and len(d) >= 4:
         return {"speed_kmh": (d[2] * 256 + d[3]) / 16}
-    if can_id == 0x380 and len(d) >= 4:
+    if can_id == 0x380 and len(d) >= 6:
         return {"parking_brake": d[0] >> 5 & 1, "doors_open": int(d[1] != 0), "reverse": d[2] >> 2 & 1,
-                "battery_v": round(d[3] * 0.16, 2)}
+                "battery_v": round(d[3] * 0.16, 2), "fuel_low": d[4] >> 1 & 1, "fuel": d[5]}  # fuel: probably L
     if can_id == 0x39A and len(d) >= 3:
         return {"seatbelt_unbuckled": d[2] & 1}
     if can_id == 0x603 and len(d) >= 6:
@@ -59,7 +59,8 @@ def test():
     assert decode(0x643, bytes.fromhex("11783047370" "5AFC0")) == {
         "trip_avg_l100km": 11.7, "trip_avg_kmh": 48, "trip_time": "47:37", "trip_km": 2329.2}
     assert decode(0x380, bytes.fromhex("200C485300170B04")) == {"parking_brake": 1, "doors_open": 1, "reverse": 0,
-                                                              "battery_v": 13.28}
+                                                              "battery_v": 13.28, "fuel_low": 0, "fuel": 23}
+    assert decode(0x380, bytes.fromhex("200040590" "20B0B04"))["fuel_low"] == 1  # reserve light on, 11
     assert decode(0x39A, bytes.fromhex("0001010000000000")) == {"seatbelt_unbuckled": 1}
     assert decode(0x683, bytes.fromhex("165022062006")) == {"clock": "16:50"}
     assert parse("0.045 t1806000000000000") == (0.045, 0x180, bytes(6))

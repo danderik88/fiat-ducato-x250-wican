@@ -47,7 +47,7 @@ sensor:
     state_class: measurement
     suggested_display_precision: 1
 
-  # No expire_after on odometer / range: they keep their last value while parked.
+  # No expire_after on odometer / range / fuel: they keep their last value while parked.
   - name: "Ducato Odometer"
     unique_id: ducato_odometer
     state_topic: "wican/<device_id>/can/rx"
@@ -65,6 +65,16 @@ sensor:
     device_class: distance
     suggested_display_precision: 0
     icon: mdi:gas-station-in-use
+
+  # 0x380 b5, probably litres. The last frame sent at key-off carries fuel = 0: drop it.
+  - name: "Ducato Fuel"
+    unique_id: ducato_fuel
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ value_json.fuel if value_json.fuel is defined and value_json.fuel > 0 }}"
+    unit_of_measurement: "L"
+    state_class: measurement
+    suggested_display_precision: 0
+    icon: mdi:gas-station
 
   # Raw 0x180 (b0<<16 | b1<<8 | b2), used by the turn-signal templates.
   - name: "Ducato 0x180 raw"
@@ -142,6 +152,15 @@ binary_sensor:
     value_template: "{{ ('ON' if value_json.parking_brake > 0.5 else 'OFF') if value_json.parking_brake is defined }}"
     expire_after: 15
     icon: mdi:car-brake-parking
+
+  # 0x380 b4 bit1 = low-fuel warning (cluster reserve light)
+  - name: "Ducato Low Fuel"
+    unique_id: ducato_low_fuel
+    state_topic: "wican/<device_id>/can/rx"
+    value_template: "{{ ('ON' if value_json.fuel_low > 0.5 else 'OFF') if value_json.fuel_low is defined }}"
+    expire_after: 15
+    device_class: problem
+    icon: mdi:gas-station-off
 
   # 0x180 bits: b0 bit7 brake pedal (0x800000), b1 bit5 side lights (0x2000),
   # b1 bit3 dipped beam (0x0800), b1 bit4 main beam (0x1000), b1 bit1 rear fog (0x0200)
