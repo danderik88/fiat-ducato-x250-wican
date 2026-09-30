@@ -178,6 +178,8 @@ The script sends `C`, `S2` (50 kbit/s) and `L` (listen-only) and records every f
 
 Thanks to **[Tidle999](https://github.com/Tidle999)** for weeks of fuel data from full to reserve on a second van.
 
+If this saved you a few evenings with a CAN sniffer, you can [buy me a coffee](https://paypal.me/merighidaniel). Data from other vans is just as welcome.
+
 ## Disclaimer
 
 This is a **hobby project**, shared for information only, with **no warranty of any kind** (see [LICENSE](LICENSE)).
